@@ -30,7 +30,7 @@ cluster in minutes with just one command:
 ```
 # eksctl create cluster
 ```
-So, here we start creating our EKS cluster using eksctl command.
+## So, here we start creating our EKS cluster using eksctl command.
 Customize your cluster by using a config file. Just run
 
 ```
@@ -75,7 +75,7 @@ fargateProfiles:
           env: dev
           checks: passed
 ```
-It takes time according to our capacity planning since, behind eksctl, it uses cloud formation stacks.
+###### It takes time according to our capacity planning since, behind eksctl, it uses cloud formation stacks.
 
 
 ![CloudFormation](images/3.png)
@@ -93,8 +93,7 @@ fargate-cluster us-east-1
 [root@server ~]# aws eks update-kubeconfig --name fargate-cluster
 Added new context arn:aws:eks:us-east-1:<ID>:cluster/fargate-cluster to ~/.kube/config
 ```
-We can check our worker nodes after completely configured as K8s worker node using a 
-public key for ssh we used in the fargatecluster.yml file.
+###### We can check our worker nodes after completely configured as K8s worker node using a public key for ssh we used in the fargatecluster.yml file.
 
 ```
 [root@server ~]# ssh -i yourkey -l ec2-user  <workernode-ip>
@@ -102,19 +101,16 @@ public key for ssh we used in the fargatecluster.yml file.
 
 ![kubelet_on_worker_node](images/4.png)
 
-Now, we can create our EFS file system in the same region and on the same VPC 
-which our EKS cluster is using currently.
+###### Now, we can create our EFS file system in the same region and on the same VPC which our EKS cluster is using currently.
 
 ![EFS_fs](images/5.png)
 
-After the successful creation of our EFS File System, now we can configure our 
-worker nodes/minions so that they are able to mount the EFS filesystem automatically 
-on EFS dynamic provisioning for the Persistent Volume Claims.
+###### After the successful creation of our EFS File System, now we can configure our worker nodes/minions so that they are able to mount the EFS filesystem automatically on EFS dynamic provisioning for the Persistent Volume Claims.
 
 ```
 [root@server ~]# ssh -i mykey1234.pem  ec2-user@<worker-nodes> "sudo yum install -y amazon-efs-utils"
 ```
-Create an EFS dynamic provisioner in the current namespace(default) and our PVs, and PVCs.
+###### Create an EFS dynamic provisioner in the current namespace(default) and our PVs, and PVCs.
 
 ```
 [root@server ~]# kubectl create -f create-rbac.yaml
@@ -137,7 +133,7 @@ pvc-8002c07d-1cda-47f4-9cbd-a7bfed00e77e   1Gi        RWX            Delete     
 pvc-aa261ca3-c8d6-4022-8a1c-57e7eede8df4   1Gi        RWX            Delete           Bound    default/efs-wordpress   aws-efs                 9m51s
 ```
 
-Now, we can create our resources like services, deployments.
+###### Now, we can create our resources like services, deployments.
 
 ```
 [root@server ~]# kubectl create -f secrets.yaml
@@ -160,8 +156,7 @@ wordpress-d46cfd788-gcjmk          1/1     Running   0          21s
 wordpress-mysql-689fcd5cd4-67mzs   1/1     Running   0          31s
 ```
 
-Finally, we can access our Stateful applications 
-e.g. WordPress using the domain name provided by AWS ELB(classical load balancer) services.
+###### Finally, we can access our Stateful applications e.g. WordPress using the domain name provided by AWS ELB(classical load balancer) services.
 
 ![wp1](images/6.png)
 ![wp2](images/7.png)
